@@ -32,22 +32,22 @@ public class RoleServiceImpl implements RoleService {
     @Transactional
     @Override
     public RoleResponse createRole(RoleRequest request) {
-        String roleName = request.getRoleEnums().getValue();
+        String roleName = request.getRole().getValue();
         return roleRepository.findByName(roleName)
                 .or(() -> Optional.of(roleRepository.save(
                         RoleEntity.builder()
                                 .name(roleName)
-                                .description(request.getRoleEnums().name())
+                                .description(request.getRole().name())
                                 .build()
                 )))
-                .map(roleMapper::convertToRoleResponse)
+                .map(roleMapper::convertRoleEntityToRoleResponse)
                 .orElseThrow(() -> new RuntimeException("Failed to create or retrieve role"));
     }
 
     @Override
     public List<RoleResponse> getRoles() {
         return roleRepository.findAll().stream()
-                .map(roleMapper::convertToRoleResponse)
+                .map(roleMapper::convertRoleEntityToRoleResponse)
                 .collect(Collectors.toList());
     }
 

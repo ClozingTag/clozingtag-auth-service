@@ -6,7 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 
 @Table
-@Entity(name = "pf_roles")
+@Entity(name = "ct_roles")
 @Data
 @Builder
 @AllArgsConstructor
