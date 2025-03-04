@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +34,8 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
-            RoleRepository roleRepository, UserMapper userMapper) {
+            RoleRepository roleRepository,
+            UserMapper userMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
@@ -46,15 +48,24 @@ public class UserServiceImpl implements UserService {
         if (roleEntity.isEmpty()) {
             throw new RoleNotFoundException("Role not found");
         }
-        UserEntity entity = userMapper.createUserEntityFromUserRequest(request);
+        UserEntity entity = createUserEntityFromUserRequest(request, roleEntity.get());
         entity.setRoles(Collections.singleton(roleEntity.get()));
         entity.setPassword(passwordEncoder.encode(request.getPassword()));
         return Optional.of(userRepository.save(entity))
                 .map(userMapper::createUserResponseFromUserEntity)
                 .orElseThrow(() -> new UserNotCreatedException("User not created"));
-
     }
 
+    private UserEntity createUserEntityFromUserRequest(UserRequest request, RoleEntity roleEntity) {
+        return UserEntity.builder()
+                .username(request.getUsername())
+                .lastname(request.getLastname())
+                .firstname(request.getFirstname())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .createdAt(LocalDateTime.now())
+                .roles(Collections.singleton(roleEntity))
+                .build();
+    }
 
     @Override
     public UserResponse getUserDetail(Long id) {

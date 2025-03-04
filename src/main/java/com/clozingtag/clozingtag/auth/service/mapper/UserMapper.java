@@ -1,13 +1,20 @@
 package com.clozingtag.clozingtag.auth.service.mapper;
 
-import com.clozingtag.clozingtag.auth.service.dto.request.user.UserRequest;
+import com.clozingtag.clozingtag.auth.service.dto.response.role.RoleResponse;
 import com.clozingtag.clozingtag.auth.service.dto.response.user.UserResponse;
+import com.clozingtag.clozingtag.auth.service.entity.RoleEntity;
 import com.clozingtag.clozingtag.auth.service.entity.UserEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+import java.util.Collection;
+
+@Mapper(componentModel = "spring", uses = RoleMapper.class)
 public interface UserMapper {
+
+    @Mapping(target = "roles", source = "roles")
     UserResponse createUserResponseFromUserEntity(UserEntity userEntity);
 
-    UserEntity createUserEntityFromUserRequest(UserRequest userRequest);
+    Collection<RoleResponse> convertRoleEntityToRoleResponse(Collection<RoleEntity> roles);
 }
+
