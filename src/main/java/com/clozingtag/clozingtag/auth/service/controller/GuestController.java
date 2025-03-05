@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("guests")
+@RequestMapping("/v1/guests")
 public class GuestController {
 
     private final UserService userService;
@@ -33,7 +33,7 @@ public class GuestController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(userRequest));
     }
 
-//    @Hidden
+    @Hidden
     @PostMapping(path = "admin")
     public ResponseEntity<UserResponse> createAdmin(@RequestBody @Valid UserRequest userRequest) {
         userRequest.setRole(RoleEnums.Admin);
