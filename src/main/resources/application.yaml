@@ -112,7 +112,7 @@ eureka:
 
 openapi:
   service:
-    title: Clozing Auth Service Docs
+    title: ClozingTag Auth Service Docs
     version: 1.0.0
     url: ${GATEWAY_URL:http://localhost:8181/api/auth} #api gateway url
 springdoc:

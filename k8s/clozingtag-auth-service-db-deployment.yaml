@@ -1,0 +1,114 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: clozingtag-auth-service-db-configmap
+data:
+  db-host: "clozingtag-auth-service-db-svc"
+  db-name: "clozingtag_auth_db"
+  db-port: "5432"
+
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: clozingtag-auth-service-db-secret
+data:
+  db-user: "cG9zdGdyZXM="
+  db-pass: "cm9vdA=="
+type: Opaque
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: clozingtag-auth-service-db-pv
+spec:
+  storageClassName: do-block-storage #manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /mnt/pf/auth/postgres
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: clozingtag-auth-service-db-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clozingtag-auth-service-db-deployment
+spec:
+  selector:
+    matchLabels:
+      app: clozingtag-auth-service-db-deployment
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: clozingtag-auth-service-db-deployment
+    spec:
+      containers:
+        - name: clozingtag-auth-service-db-deployment
+          image: postgres:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              cpu: "50m"
+              memory: "96Mi"
+            requests:
+              cpu: "40m"
+              memory: "64Mi"
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: clozingtag-auth-service-db-secret
+                  key: db-user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: clozingtag-auth-service-db-secret
+                  key: db-pass
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: clozingtag-auth-service-db-configmap
+                  key: db-name
+          volumeMounts:
+            - name: clozingtag-auth-service-db-data
+              mountPath: "/var/lib/postgresql/data"
+      volumes:
+        - name: clozingtag-auth-service-db-data
+          persistentVolumeClaim:
+            claimName: clozingtag-auth-service-db-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: clozingtag-auth-service-db-svc
+spec:
+  selector:
+    app: clozingtag-auth-service-db-deployment
+  ports:
+    - protocol: "TCP"
+      name: "clozingtag-auth-service-db-svc"
+      port: 5432
+      targetPort: 5432
+  type: ClusterIP
