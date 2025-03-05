@@ -1,0 +1,128 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: clozingtag-auth-service-configmap
+data:
+  active-profile: "default"
+  auth-gateway-url: "https://api.pf.hexmedia.biz/v1/auth"
+  db-name: "pf_auth_db"
+  db-port: "25060"
+  db-host: "hm-postgres-do-user-16823096-0.c.db.ondigitalocean.com"
+  auth-server-url: "https://api.pf.hexmedia.biz/v1/auth/oauth2/jwks"
+  base-url: "https://api.pf.hexmedia.biz"
+
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: clozingtag-auth-service-secret
+data:
+  client-secret: "cGVlci5mdW5kaW5nQDIw"
+  client-id: "cGVlci5mdW5kaW5n"
+  db-user: "cGZhZG1pbg=="
+  db-pass: "QVZOU19IUkFwUXVGbWNkd1JuSmk2SGZr"
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clozingtag-auth-service-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: clozingtag-auth-service-deployment
+  template:
+    metadata:
+      labels:
+        app: clozingtag-auth-service-deployment
+    spec:
+      containers:
+        - env:
+            - name: JAVA_OPTIONS
+              value: -XX:TieredStopAtLevel=1 -noverify -Xms128m -Xmx512m -Xss4m -XX:ParallelGCThreads=1
+                -XX:ConcGCThreads=1 -Djava.util.concurrent.ForkJoinPool.common.parallelism=1
+                -cp .
+            - name: SPRING_PROFILES_ACTIVE
+              valueFrom:
+                configMapKeyRef:
+                  key: active-profile
+                  name: clozingtag-auth-service-configmap
+            - name: BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: clozingtag-auth-service-configmap
+                  key: base-url
+            - name: DISCOVERY_SERVER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: clozingtag-discovery-service-configmap
+                  key: discovery-server-url
+            - name: GATEWAY_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: clozingtag-auth-service-configmap
+                  key: auth-gateway-url
+#            - name: CONFIG_SERVER
+#              valueFrom:
+#                configMapKeyRef:
+#                  name: clozingtag-auth-service-configmap
+#                  key: config-server-url
+            - name: CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: clozingtag-auth-service-secret
+                  key: client-id
+            - name: CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: clozingtag-auth-service-secret
+                  key: client-secret
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: clozingtag-auth-service-configmap
+                  key: db-host
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: clozingtag-auth-service-configmap
+                  key: db-port
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: clozingtag-auth-service-configmap
+                  key: db-name
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: clozingtag-auth-service-secret
+                  key: db-user
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: clozingtag-auth-service-secret
+                  key: db-pass
+          image: <IMAGE>
+          imagePullPolicy: IfNotPresent
+          name: clozingtag-auth-service
+          ports:
+            - containerPort: 8182
+              protocol: TCP
+          resources: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: clozingtag-auth-service-svc
+spec:
+  selector:
+    app: clozingtag-auth-service-deployment
+  ports:
+    - protocol: "TCP"
+      port: 8182
+      targetPort: 8182
+  type: ClusterIP
