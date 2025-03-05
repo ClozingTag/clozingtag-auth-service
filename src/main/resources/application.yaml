@@ -114,7 +114,7 @@ openapi:
   service:
     title: Clozing Auth Service Docs
     version: 1.0.0
-    url: ${GATEWAY_URL:http://localhost:8181/v1/auth} #api gateway url
+    url: ${GATEWAY_URL:http://localhost:8181/api/auth} #api gateway url
 springdoc:
   api-docs:
     path: /v3/api-docs
