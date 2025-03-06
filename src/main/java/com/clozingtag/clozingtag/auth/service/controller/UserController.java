@@ -40,7 +40,7 @@ public class UserController {
       summary = "findAllUsers",
       description = "returns all users",
       tags = {"Users"})
-  @PostMapping("/all")
+  @GetMapping("/all")
   public ResponseEntity<List<UserResponse>> findAllUsers(
           @Parameter(description = "Page number (default: 0)") @RequestParam(defaultValue = "0") int page,
           @Parameter(description = "Page number (default: 0)") @RequestParam(defaultValue = "10") int size
