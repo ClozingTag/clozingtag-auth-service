@@ -4,9 +4,9 @@ metadata:
   name: clozingtag-auth-service-configmap
 data:
   active-profile: "default"
-  openapi-gateway-url: "http://clozingtag-gateway-service-svc:8181/api/auth" # http://localhost:8181/api/auth
-  auth-server-url: "http://clozingtag-gateway-service-svc:8181/api/auth/oauth2/jwks" # http://localhost:8181/api/auth/oauth2/jwks
-  base-url: "http://clozingtag-gateway-service-svc:8181" # http://localhost:8181
+  openapi-gateway-url: "http://localhost:8181/api/auth" #  "https://live.clozingtag.com/api/auth"
+  auth-server-url: "http://clozingtag-gateway-service-svc:8181/api/auth/oauth2/jwks" # https://live.clozingtag.com/api/auth/oauth2/jwks
+  base-url: "http://clozingtag-gateway-service-svc:8181" # https://live.clozingtag.com
 
 
 ---
