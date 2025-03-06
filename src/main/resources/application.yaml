@@ -8,7 +8,7 @@ auth:
   msg: "Welcome to ClozingTag Auth Default Application"
   build-version: 1.0.0
   base-url: ${BASE_URL:http://localhost:8181}
-  environment: ${ENVIRONMENT:sandbox}
+  environment: ${ENVIRONMENT:""}
   oauth:
     clientId: ${CLIENT_ID:closing.tag}
     clientSecret: ${CLIENT_SECRET:closing.tag@25}
@@ -114,7 +114,7 @@ openapi:
   service:
     title: ClozingTag Auth Service Docs
     version: 1.0.0
-    url: ${GATEWAY_URL:http://localhost:8181/api/auth} #api gateway url
+    url: ${OPENAPI_GATEWAY_URL:http://localhost:8181/api/auth} #api gateway url
 springdoc:
   api-docs:
     path: /v3/api-docs

@@ -4,7 +4,7 @@ metadata:
   name: clozingtag-auth-service-db-configmap
 data:
   db-host: "clozingtag-auth-service-db-svc"
-  db-name: "clozingtag_auth_db"
+  db-name: "ct_auth_service_db"
   db-port: "5432"
 
 
