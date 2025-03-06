@@ -53,6 +53,7 @@ public class SecurityConfiguration {
             "/error",
             "/v1/guests/**",
             "/v1/roles/**",
+            "/v1/roles",
             "/v1/auth/v3/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",

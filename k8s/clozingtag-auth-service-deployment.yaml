@@ -4,12 +4,9 @@ metadata:
   name: clozingtag-auth-service-configmap
 data:
   active-profile: "default"
-  auth-gateway-url: "https://api.pf.hexmedia.biz/v1/auth"
-  db-name: "pf_auth_db"
-  db-port: "25060"
-  db-host: "hm-postgres-do-user-16823096-0.c.db.ondigitalocean.com"
-  auth-server-url: "https://api.pf.hexmedia.biz/v1/auth/oauth2/jwks"
-  base-url: "https://api.pf.hexmedia.biz"
+  openapi-gateway-url: "http://clozingtag-gateway-service-svc:8181/api/auth" # http://localhost:8181/api/auth
+  auth-server-url: "http://clozingtag-gateway-service-svc:8181/api/auth/oauth2/jwks" # http://localhost:8181/api/auth/oauth2/jwks
+  base-url: "http://clozingtag-gateway-service-svc:8181" # http://localhost:8181
 
 
 ---
@@ -18,11 +15,8 @@ kind: Secret
 metadata:
   name: clozingtag-auth-service-secret
 data:
-  client-secret: "cGVlci5mdW5kaW5nQDIw"
-  client-id: "cGVlci5mdW5kaW5n"
-  db-user: "cGZhZG1pbg=="
-  db-pass: "QVZOU19IUkFwUXVGbWNkd1JuSmk2SGZr"
-
+  client-secret: "Y2xvc2luZy50YWdAMjU=" # closing.tag@25
+  client-id: "Y2xvc2luZy50YWc=" # closing.tag # echo -n 'closing.tag' | base64
 
 ---
 apiVersion: apps/v1
@@ -60,11 +54,11 @@ spec:
                 configMapKeyRef:
                   name: clozingtag-discovery-service-configmap
                   key: discovery-server-url
-            - name: GATEWAY_URL
+            - name: OPENAPI_GATEWAY_URL
               valueFrom:
                 configMapKeyRef:
                   name: clozingtag-auth-service-configmap
-                  key: auth-gateway-url
+                  key: openapi-gateway-url
 #            - name: CONFIG_SERVER
 #              valueFrom:
 #                configMapKeyRef:
@@ -83,27 +77,27 @@ spec:
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: clozingtag-auth-service-configmap
+                  name: clozingtag-auth-service-db-configmap
                   key: db-host
             - name: DB_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: clozingtag-auth-service-configmap
+                  name: clozingtag-auth-service-db-configmap
                   key: db-port
             - name: DB_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: clozingtag-auth-service-configmap
+                  name: clozingtag-auth-service-db-configmap
                   key: db-name
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: clozingtag-auth-service-secret
+                  name: clozingtag-auth-service-db-secret
                   key: db-user
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  name: clozingtag-auth-service-secret
+                  name: clozingtag-auth-service-db-secret
                   key: db-pass
           image: <IMAGE>
           imagePullPolicy: IfNotPresent
@@ -112,7 +106,8 @@ spec:
             - containerPort: 8182
               protocol: TCP
           resources: {}
-
+      imagePullSecrets:
+        - name: clozingtag-ghrc-deployment-secrets
 ---
 apiVersion: v1
 kind: Service
