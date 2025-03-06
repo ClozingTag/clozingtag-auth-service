@@ -220,6 +220,6 @@ public class SecurityConfiguration {
         return (web) ->
                 web.ignoring()
                         .requestMatchers(
-                                "/webjars/**", "/image/**", "/permissions/**", "/guests/**", "/roles/**");
+                                "/webjars/**", "/image/**", "/v1/guests/**", "/v1/roles/**", "/v1/roles/","/v1/roles");
     }
 }
