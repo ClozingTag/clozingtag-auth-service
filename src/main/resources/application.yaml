@@ -114,7 +114,7 @@ openapi:
   service:
     title: ClozingTag Auth Service Docs
     version: 1.0.0
-    url: ${OPENAPI_GATEWAY_URL:http://localhost:8181/api/auth} #api gateway url
+    url: ${OPENAPI_GATEWAY_URL:http://localhost:8181/api/auth} #api gateway url https://live.clozingtag.come/api/auth
 springdoc:
   api-docs:
     path: /v3/api-docs
