@@ -54,7 +54,7 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "github-actions@github.com"
           git remote set-url origin https://github.com/${{ github.repository }}.git
-          git add k8s/clozingtag-notification-service-deployment.yaml
+          git add k8s/clozingtag-auth-service-deployment.yaml
           git commit -m "Update deployment YAML with SHA ${GITHUB_SHA}"
           git push https://github.com/${{ github.repository }} HEAD:main --force
         env:
