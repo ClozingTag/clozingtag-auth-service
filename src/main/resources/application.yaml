@@ -28,7 +28,7 @@ spring:
   application:
     name: clozingtag-auth-service
   profiles:
-    active: ${ACTIVE_PROFILE:default} #default
+    active: default
 #  cloud:
 #    config:
 #      uri: ${CONFIG_SERVER:http://localhost:8888}
