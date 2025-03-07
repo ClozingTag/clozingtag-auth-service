@@ -99,7 +99,7 @@ spec:
                 secretKeyRef:
                   name: clozingtag-auth-service-db-secret
                   key: db-pass
-          image: <IMAGE>
+          image: ghcr.io/clozingtag/clozingtag-auth-service:21c6a19
           imagePullPolicy: IfNotPresent
           name: clozingtag-auth-service
           ports:
