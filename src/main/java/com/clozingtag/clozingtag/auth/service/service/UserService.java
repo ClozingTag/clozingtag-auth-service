@@ -13,9 +13,9 @@ public interface UserService {
 
     UserResponse createUser(UserRequest userRequest);
 
-    UserResponse getUserDetail(Long id);
+    UserResponse getUser(Long id);
 
     UserResponse getUserDetails(String email);
 
-    List<UserResponse> getAllUsers(Pageable pageable);
+    List<UserResponse> getUsers(Pageable pageable);
 }

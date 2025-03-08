@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse getUserDetail(Long id) {
+    public UserResponse getUser(Long id) {
         return userRepository.findById(id)
                 .map(userMapper::createUserResponseFromUserEntity)
                 .orElseThrow(() -> new UserNotFoundException("User not created"));
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResponse> getAllUsers(Pageable pageable) {
+    public List<UserResponse> getUsers(Pageable pageable) {
         return userRepository.findAll(pageable).getContent().stream()
                 .map(userMapper::createUserResponseFromUserEntity).collect(Collectors.toList());
 
