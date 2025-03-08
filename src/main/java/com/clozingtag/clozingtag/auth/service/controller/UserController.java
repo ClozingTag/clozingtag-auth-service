@@ -37,15 +37,15 @@ public class UserController {
   }
 
   @Operation(
-      summary = "findAllUsers",
+      summary = "getUsers",
       description = "returns all users",
       tags = {"Users"})
-  @GetMapping("/all")
-  public ResponseEntity<List<UserResponse>> findAllUsers(
+  @GetMapping("")
+  public ResponseEntity<List<UserResponse>> getUsers(
           @Parameter(description = "Page number (default: 0)") @RequestParam(defaultValue = "0") int page,
           @Parameter(description = "Page number (default: 0)") @RequestParam(defaultValue = "10") int size
   ) {
-    return ResponseEntity.ok(userService.getAllUsers(PageRequest.of(page, size)));
+    return ResponseEntity.ok(userService.getUsers(PageRequest.of(page, size)));
   }
 
   @Operation(
@@ -58,12 +58,12 @@ public class UserController {
   }
 
   @Operation(
-      summary = "getUserDetails",
+      summary = "getUser",
       description = "returns user details",
       tags = {"Users"})
-  @GetMapping(value = "details/{id}")
-  public ResponseEntity<UserResponse>  getUserDetail(@PathVariable Long id) {
-    return ResponseEntity.ok(userService.getUserDetail(id));
+  @GetMapping(value = "{id}")
+  public ResponseEntity<UserResponse>  getUser(@PathVariable Long id) {
+    return ResponseEntity.ok(userService.getUser(id));
   }
 
 }

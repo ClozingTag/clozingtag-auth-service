@@ -32,7 +32,10 @@ public class GuestController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(userRequest));
     }
 
-
+    @Operation(
+            summary = "create admin",
+            description = "Returns admin details",
+            tags = {"Guest Access"})
     @PostMapping(path = "admin")
     public ResponseEntity<UserResponse> createAdmin(@RequestBody @Valid UserRequest userRequest) {
         userRequest.setRole(RoleEnums.Admin);
